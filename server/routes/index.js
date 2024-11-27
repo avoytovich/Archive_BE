@@ -1,6 +1,7 @@
+const { upload } = require('./../helper/uploading');
+
 const { 
-  userController,
-  needController,
+  archiveController
 } = require('./../controllers');
 
 module.exports =
@@ -9,11 +10,6 @@ module.exports =
       message: 'Welcome'
     }));
 
-    app.post('/login', userController.login);
-    // app.post('/user/:id/user_activate', userController.activation);
-    // app.post('/user/:id/user_deactivate', userController.deactivation);
-
-    app.get('/needs', needController.getAll);
-    app.post('/needs/create', needController.create);
-
+    app.post('/create', upload.single('archive'), archiveController.create);
+    app.get('/archives', archiveController.getAll);
   };

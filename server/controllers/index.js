@@ -1,7 +1,5 @@
-const userController = require('./user.controller');
-const needController = require('./need.controller');
+const archiveController = require('./archive.controller');
 
 module.exports = {
-  userController,
-  needController,
+  archiveController
 };
