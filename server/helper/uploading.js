@@ -22,8 +22,8 @@ const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
       const ext = path.extname(file.originalname);
-      if (ext !== '.docx') {
-          return cb(new Error('Only .docx files are allowed!'), false);
+      if (ext !== '.pdf') {
+          return cb(new Error('Only .pdf files are allowed!'), false);
       }
       cb(null, true);
   },
