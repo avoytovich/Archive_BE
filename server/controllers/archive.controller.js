@@ -1,10 +1,11 @@
 const { Archive, Sequelize } = require('./../models');
 const { getPagination, getPagingData } = require('./../helper/pagination');
 const { archive: messages } = require('./../helper/messages');
+const path = require('path');
 
 module.exports = {
   create(req, res) {
-    const { title } = req.body;
+    const title = path.basename(req.file.originalname, path.extname(req.file.originalname));
     const filePath = req.file.path;
     
     Archive.create({ title, filePath })
@@ -21,7 +22,8 @@ module.exports = {
     Archive.findAndCountAll({
         limit,
         offset,
-        where: condition
+        where: condition,
+        order: [['createdAt', 'DESC']]
       })
       .then((archives) => {
         const baseUrl = `${req.protocol}://${req.get('host')}`;
