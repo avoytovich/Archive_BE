@@ -1,19 +1,22 @@
-const { 
-  userController,
-  needController,
-} = require('./../controllers');
+const { upload } = require('./../helper/uploading');
+const { archiveController } = require('./../controllers');
 
-module.exports =
-  (app) => {
-    app.get('/test', (req, res) => res.status(200).send({
-      message: 'Welcome'
-    }));
+module.exports = (app) => {
+  // Test route for verification
+  app.get('/test', (req, res) => res.status(200).send({
+    message: 'Welcome'
+  }));
 
-    app.post('/login', userController.login);
-    // app.post('/user/:id/user_activate', userController.activation);
-    // app.post('/user/:id/user_deactivate', userController.deactivation);
+  // Route to create a new archive (uploading)
+  app.post('/create', upload.single('archive'), archiveController.create);
 
-    app.get('/needs', needController.getAll);
-    app.post('/needs/create', needController.create);
+  // Route to get all archives (with pagination and optional title filter)
+  app.get('/archives', archiveController.getAll);
 
-  };
+  // Route to delete a single archive by ID
+  app.delete('/archives/:id', archiveController.delete);
+
+  // Route for bulk delete (accepts an array of IDs)
+  app.post('/archives/bulk-delete', archiveController.bulkDelete);
+};
+
