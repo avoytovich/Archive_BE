@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   Archive.init({
     title: DataTypes.STRING,
-    filePath: DataTypes.STRING
+    filePath: DataTypes.STRING,
+    group: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Archive'
