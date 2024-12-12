@@ -7,6 +7,9 @@ module.exports = (app) => {
     message: 'Welcome'
   }));
 
+  // Endpoint to fetch distinct groups
+  app.get("/groups", archiveController.getAllGroups);
+
   // Route to create a new archive (uploading)
   app.post('/create', upload.single('archive'), archiveController.create);
 

@@ -13,8 +13,9 @@ module.exports = {
   create(req, res) {
     const title = path.basename(req.file.originalname, path.extname(req.file.originalname));
     const filePath = req.file.path;
+    const group = req.body.group;
 
-    Archive.create({ title, filePath })
+    Archive.create({ title, filePath, group })
       .then((archive) =>
         res.status(200).json({ message: messages.created, archive })
       )
@@ -23,9 +24,20 @@ module.exports = {
 
   // Get all archives with pagination and optional title filter
   getAll(req, res) {
-    const { page, size, title } = req.query;
-    const condition = title ? { title: { [Sequelize.Op.like]: `%${title}%` } } : null;
+    const { page, size, title, group } = req.query;
     const { limit, offset } = getPagination(page, size);
+
+    // Create condition for title filter
+    const titleCondition = title ? { title: { [Sequelize.Op.like]: `%${title}%` } } : null;
+    
+    // Create condition for group filter (assuming group is a field in your Archive model)
+    const groupCondition = group ? { group: { [Sequelize.Op.eq]: group } } : null;
+
+    // Combine conditions if both title and group filters are provided
+    const condition = {
+      ...titleCondition,
+      ...groupCondition,
+    };
 
     Archive.findAndCountAll({
       limit,
@@ -119,5 +131,16 @@ module.exports = {
           });
       })
       .catch((error) => res.status(500).send({ error: error.message }));
+  },
+
+  // Fetch distinct groups
+  getAllGroups (req, res) {
+    Archive.aggregate("group", "DISTINCT", { plain: false })
+      .then((groups) => {
+        res.status(200).json(groups.map((g) => g.DISTINCT));
+      })
+      .catch((error) => {
+        res.status(500).json({ error: error.message  });
+      })
   }
 };
