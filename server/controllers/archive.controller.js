@@ -24,11 +24,11 @@ module.exports = {
 
   // Get all archives with pagination and optional title filter
   getAll(req, res) {
-    const { page, size, title, group } = req.query;
+    const { page, size, search, group } = req.query;
     const { limit, offset } = getPagination(page, size);
 
     // Create condition for title filter
-    const titleCondition = title ? { title: { [Sequelize.Op.like]: `%${title}%` } } : null;
+    const titleCondition = search ? { title: { [Sequelize.Op.iLike]: `%${search}%` } } : null;
     
     // Create condition for group filter (assuming group is a field in your Archive model)
     const groupCondition = group ? { group: { [Sequelize.Op.eq]: group } } : null;
